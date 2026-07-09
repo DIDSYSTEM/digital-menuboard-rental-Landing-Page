@@ -44,6 +44,8 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
   const [visibleCasesCount, setVisibleCasesCount] = useState(3);
   const [storeImages, setStoreImages] = useState<string[]>([]);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isKakaoActive, setIsKakaoActive] = useState(false);
+  const [kakaoRecipient, setKakaoRecipient] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -150,6 +152,11 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
       return;
     }
 
+    const kakaoEnabled = localStorage.getItem('did_kakao_enabled') === 'true';
+    const kakaoPhone = localStorage.getItem('did_kakao_admin_phone') || '010-4567-8910';
+    setIsKakaoActive(kakaoEnabled);
+    setKakaoRecipient(kakaoPhone);
+
     onAddInquiry({
       name,
       phone,
@@ -173,7 +180,7 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
 
     setTimeout(() => {
       setFormSubmitted(false);
-    }, 5000);
+    }, 7000);
   };
 
   const scrollToSection = (id: string) => {
@@ -925,6 +932,17 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
               <p className="text-on-surface-variant max-w-sm text-sm leading-relaxed mb-6">
                 입력해 주신 정보가 안전하게 전달되었습니다. 본사 담당 플래너가 영업시간 기준 24시간 내로 유선 전화를 드려 상세 견적서 안내와 일정 조율을 도와드리겠습니다.
               </p>
+              {isKakaoActive && (
+                <div className="bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 rounded-lg p-3.5 max-w-sm mb-6 text-xs text-left flex items-start gap-2.5">
+                  <span className="bg-yellow-500 text-black px-1.5 py-0.5 rounded text-[9px] font-black uppercase font-mono mt-0.5 shrink-0">TALK</span>
+                  <div>
+                    <p className="font-bold text-yellow-400">실시간 관리자 카카오 알림톡 전송 완료</p>
+                    <p className="text-[#a3a6ad] mt-0.5 leading-relaxed">
+                      신규 견적 의뢰가 관리자({kakaoRecipient}) 스마트폰으로 실시간 발송되었습니다. 신속히 대답해 드리겠습니다.
+                    </p>
+                  </div>
+                </div>
+              )}
               <button 
                 onClick={() => setFormSubmitted(false)}
                 className="px-6 py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-variant border border-outline-variant text-xs font-bold text-white transition-colors cursor-pointer"

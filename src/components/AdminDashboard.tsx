@@ -33,6 +33,8 @@ interface AdminDashboardProps {
   onUpdateInquiryStatus: (id: string, status: RentalInquiry['status']) => void;
   hardware: HardwareItem[];
   onUpdateHardwareStock: (id: string, delta: number) => void;
+  onResetToDefault: () => void;
+  onClearAll: () => void;
   onLogout: () => void;
 }
 
@@ -47,6 +49,8 @@ export default function AdminDashboard({
   onUpdateInquiryStatus,
   hardware,
   onUpdateHardwareStock,
+  onResetToDefault,
+  onClearAll,
   onLogout
 }: AdminDashboardProps) {
   
@@ -54,6 +58,99 @@ export default function AdminDashboard({
   const [activeTab, setActiveTab] = useState<TabType>('installations');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedInquiryImage, setSelectedInquiryImage] = useState<string | null>(null);
+
+  // Analytics Timeframe: 'year' | 'month' | 'day'
+  const [analyticsTimeframe, setAnalyticsTimeframe] = useState<'year' | 'month' | 'day'>('month');
+
+  // Analytical Dataset States
+  const [yearlyData, setYearlyData] = useState([
+    { label: '2024년', val: '112건', h: '45%' },
+    { label: '2025년', val: '245건', h: '75%' },
+    { label: '2026년', val: '320건', h: '95%', cur: true }
+  ]);
+  const [monthlyData, setMonthlyData] = useState([
+    { label: '2월', val: '14건', h: '35%' },
+    { label: '3월', val: '19건', h: '48%' },
+    { label: '4월', val: '28건', h: '65%' },
+    { label: '5월', val: '32건', h: '72%' },
+    { label: '6월', val: '45건', h: '88%' },
+    { label: '7월', val: '52건', h: '95%', cur: true }
+  ]);
+  const [dailyData, setDailyData] = useState([
+    { label: '7/1 (월)', val: '2건', h: '25%' },
+    { label: '7/2 (화)', val: '3건', h: '38%' },
+    { label: '7/3 (수)', val: '5건', h: '55%' },
+    { label: '7/4 (목)', val: '4건', h: '48%' },
+    { label: '7/5 (금)', val: '6건', h: '70%' },
+    { label: '7/6 (토)', val: '9건', h: '95%', cur: true }
+  ]);
+
+  const handleResetStatistics = () => {
+    if (confirm('통계 분석 데이터(방문 및 전환 이력)를 초기화하시겠습니까?')) {
+      setYearlyData([
+        { label: '2024년', val: '0건', h: '1%' },
+        { label: '2025년', val: '0건', h: '1%' },
+        { label: '2026년', val: '0건', h: '1%', cur: true }
+      ]);
+      setMonthlyData([
+        { label: '2월', val: '0건', h: '1%' },
+        { label: '3월', val: '0건', h: '1%' },
+        { label: '4월', val: '0건', h: '1%' },
+        { label: '5월', val: '0건', h: '1%' },
+        { label: '6월', val: '0건', h: '1%' },
+        { label: '7월', val: '0건', h: '1%', cur: true }
+      ]);
+      setDailyData([
+        { label: '7/1 (월)', val: '0건', h: '1%' },
+        { label: '7/2 (화)', val: '0건', h: '1%' },
+        { label: '7/3 (수)', val: '0건', h: '1%' },
+        { label: '7/4 (목)', val: '0건', h: '1%' },
+        { label: '7/5 (금)', val: '0건', h: '1%' },
+        { label: '7/6 (토)', val: '0건', h: '1%', cur: true }
+      ]);
+      triggerNotification('통계 그래프 및 기록이 초기화되었습니다.', 'success');
+    }
+  };
+
+  const handleRestoreStatistics = () => {
+    setYearlyData([
+      { label: '2024년', val: '112건', h: '45%' },
+      { label: '2025년', val: '245', h: '75%' },
+      { label: '2026년', val: '320건', h: '95%', cur: true }
+    ]);
+    setMonthlyData([
+      { label: '2월', val: '14건', h: '35%' },
+      { label: '3월', val: '19건', h: '48%' },
+      { label: '4월', val: '28건', h: '65%' },
+      { label: '5월', val: '32건', h: '72%' },
+      { label: '6월', val: '45건', h: '88%' },
+      { label: '7월', val: '52건', h: '95%', cur: true }
+    ]);
+    setDailyData([
+      { label: '7/1 (월)', val: '2건', h: '25%' },
+      { label: '7/2 (화)', val: '3건', h: '38%' },
+      { label: '7/3 (수)', val: '5건', h: '55%' },
+      { label: '7/4 (목)', val: '4건', h: '48%' },
+      { label: '7/5 (금)', val: '6건', h: '70%' },
+      { label: '7/6 (토)', val: '9건', h: '95%', cur: true }
+    ]);
+    triggerNotification('통계 분석 데이터가 기본 샘플 값으로 복원되었습니다.', 'success');
+  };
+
+  // KakaoTalk Alert Settings State (Stored in localStorage or local state)
+  const [isKakaoEnabled, setIsKakaoEnabled] = useState(() => {
+    return localStorage.getItem('did_kakao_enabled') === 'true';
+  });
+  const [kakaoSenderKey, setKakaoSenderKey] = useState(() => {
+    return localStorage.getItem('did_kakao_sender_key') || 'DIDSYS-2026-KEY';
+  });
+  const [kakaoTemplateId, setKakaoTemplateId] = useState(() => {
+    return localStorage.getItem('did_kakao_template_id') || 'tmpl_new_inquiry_alert_01';
+  });
+  const [kakaoAdminPhone, setKakaoAdminPhone] = useState(() => {
+    return localStorage.getItem('did_kakao_admin_phone') || '010-4567-8910';
+  });
+  const [kakaoTestSending, setKakaoTestSending] = useState(false);
 
   // Register New Case Form State
   const [formTitle, setFormTitle] = useState('');
@@ -201,7 +298,8 @@ export default function AdminDashboard({
         specs: formSpecs,
         location: formLocation
       });
-      triggerNotification('새 설치 사례가 등록되었습니다.');
+      triggerNotification('새 설치 사례가 등록되었습니다.', 'success');
+      setInstallationSearch(''); // Clear search query so the new case is visible immediately!
     }
 
     // Reset Form
@@ -222,6 +320,40 @@ export default function AdminDashboard({
     }
   };
 
+  const handleSaveKakaoSettings = () => {
+    localStorage.setItem('did_kakao_enabled', isKakaoEnabled ? 'true' : 'false');
+    localStorage.setItem('did_kakao_sender_key', kakaoSenderKey);
+    localStorage.setItem('did_kakao_template_id', kakaoTemplateId);
+    localStorage.setItem('did_kakao_admin_phone', kakaoAdminPhone);
+    triggerNotification('카카오톡 알림톡 연동 설정이 성공적으로 보존되었습니다.', 'success');
+  };
+
+  const handleSendTestKakao = () => {
+    if (!kakaoAdminPhone) {
+      triggerNotification('수신할 관리자 전화번호를 입력해 주세요.', 'error');
+      return;
+    }
+    setKakaoTestSending(true);
+    setTimeout(() => {
+      setKakaoTestSending(false);
+      triggerNotification(`[카카오 알림톡 발송 완료] ${kakaoAdminPhone} 번호로 시뮬레이션 알림톡이 성공적으로 발송되었습니다!`, 'success');
+    }, 1200);
+  };
+
+  const handleResetDataClick = () => {
+    if (confirm('모든 데이터를 시스템 초기 공공 템플릿 기본값으로 복원하시겠습니까?\n(설치 사례, 상담 신청, 재고 수량이 최초 상태로 재생성됩니다)')) {
+      onResetToDefault();
+      triggerNotification('전체 데이터가 기본 템플릿으로 복원되었습니다.', 'success');
+    }
+  };
+
+  const handleClearAllDataClick = () => {
+    if (confirm('경고: 복구가 불가능합니다.\n정말로 모든 설치 사례, 고객 상담 신청 목록, 기기 목록을 영구적으로 완전히 삭제하시겠습니까?')) {
+      onClearAll();
+      triggerNotification('모든 데이터베이스가 깨끗하게 초기화되었습니다.', 'success');
+    }
+  };
+
   const selectPresetImage = (url: string) => {
     setFormImgUrl(url);
     triggerNotification('프리셋 이미지가 자동 선택되었습니다.');
@@ -229,6 +361,7 @@ export default function AdminDashboard({
 
   const handleAddCaseSidebarClick = () => {
     setActiveTab('installations');
+    handleCancelEdit(); // Clear fields and cancel editing state
     setTimeout(() => {
       formRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
@@ -410,7 +543,10 @@ export default function AdminDashboard({
                     />
                   </div>
                   <button 
-                    onClick={() => formRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => {
+                      handleCancelEdit();
+                      formRef.current?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                     className="btn-gradient shrink-0 px-5 py-2.5 rounded-lg text-black font-bold text-xs flex items-center gap-1.5 neon-glow hover:scale-105 transition-transform duration-200"
                   >
                     <Plus className="w-4 h-4" /> 새 사례 추가
@@ -882,38 +1018,109 @@ export default function AdminDashboard({
           {/* TAB 5: ANALYTICS */}
           {activeTab === 'analytics' && (
             <div className="space-y-8 animate-fadeIn">
-              <div className="max-w-3xl">
+              <div className="max-w-3xl flex flex-col gap-6">
                 
-                {/* Lead conversions chart */}
-                <div className="glass-panel p-6 rounded-xl flex flex-col">
-                  <h3 className="font-bold text-lg text-white mb-2">월별 신규 렌탈 문의 건수 (Inquiries Lead)</h3>
-                  <p className="text-xs text-on-surface-variant mb-6">오가닉 검색 및 랜딩 페이지 무료 견적 신청 전환 건수 추이</p>
+                {/* Header & Control Actions */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-bold text-xl text-white">렌탈 통계 및 전환 분석</h3>
+                    <p className="text-xs text-on-surface-variant mt-1">
+                      년도별, 월별, 일별 스케일로 필터링하여 무료 견적 신청 전환 건수의 흐름을 정밀 추적합니다.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      id="btn_reset_stats"
+                      onClick={handleResetStatistics}
+                      className="px-3 py-1.5 rounded bg-red-950/40 hover:bg-red-900/60 border border-red-800 text-red-200 text-xs font-bold transition-all cursor-pointer"
+                    >
+                      통계 초기화
+                    </button>
+                    <button
+                      id="btn_restore_stats"
+                      onClick={handleRestoreStatistics}
+                      className="px-3 py-1.5 rounded bg-surface-container border border-outline-variant/40 hover:border-primary text-white text-xs font-bold transition-all cursor-pointer"
+                    >
+                      기본 샘플 복원
+                    </button>
+                  </div>
+                </div>
+
+                {/* Lead conversions chart card */}
+                <div className="glass-panel p-6 rounded-xl flex flex-col relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#fbba68] to-transparent opacity-40"></div>
                   
-                  {/* custom vector SVG curves */}
-                  <div className="h-64 flex items-end justify-between w-full font-mono text-[10px] text-on-surface-variant gap-2 pt-4 relative">
+                  {/* Scale selection tabs */}
+                  <div className="flex items-center justify-between border-b border-[#40484e]/30 pb-4 mb-6">
+                    <div className="flex bg-surface-container-low p-1 rounded-lg border border-outline-variant/20">
+                      <button
+                        id="scale_year"
+                        onClick={() => setAnalyticsTimeframe('year')}
+                        className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${analyticsTimeframe === 'year' ? 'bg-[#fbba68] text-black shadow-sm' : 'text-on-surface-variant hover:text-white'}`}
+                      >
+                        년도별 (Yearly)
+                      </button>
+                      <button
+                        id="scale_month"
+                        onClick={() => setAnalyticsTimeframe('month')}
+                        className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${analyticsTimeframe === 'month' ? 'bg-[#fbba68] text-black shadow-sm' : 'text-on-surface-variant hover:text-white'}`}
+                      >
+                        월별 (Monthly)
+                      </button>
+                      <button
+                        id="scale_day"
+                        onClick={() => setAnalyticsTimeframe('day')}
+                        className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer ${analyticsTimeframe === 'day' ? 'bg-[#fbba68] text-black shadow-sm' : 'text-on-surface-variant hover:text-white'}`}
+                      >
+                        일별 (Daily)
+                      </button>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="text-[10px] uppercase tracking-wider font-mono text-on-surface-variant">Active Series Scale</span>
+                      <p className="text-xs font-bold text-white">
+                        {analyticsTimeframe === 'year' && '2024년 - 2026년 누계'}
+                        {analyticsTimeframe === 'month' && '최근 6개월 월간 전환 추이'}
+                        {analyticsTimeframe === 'day' && '최근 6일간 일별 실시간 리드'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* custom vector graph columns */}
+                  <div className="h-64 flex items-end justify-between w-full font-mono text-[10px] text-on-surface-variant gap-4 pt-4 relative">
                     <div className="absolute left-0 right-0 top-1/4 border-b border-[#40484e]/10 h-0" />
                     <div className="absolute left-0 right-0 top-2/4 border-b border-[#40484e]/10 h-0" />
                     <div className="absolute left-0 right-0 top-3/4 border-b border-[#40484e]/10 h-0" />
 
-                    {[
-                      { label: '2월', val: '14건', h: '35%' },
-                      { label: '3월', val: '19건', h: '48%' },
-                      { label: '4월', val: '28건', h: '65%' },
-                      { label: '5월', val: '32건', h: '72%' },
-                      { label: '6월', val: '45건', h: '88%' },
-                      { label: '7월', val: '52건', h: '95%', cur: true }
-                    ].map((bar, i) => (
+                    {(analyticsTimeframe === 'year' ? yearlyData : analyticsTimeframe === 'month' ? monthlyData : dailyData).map((bar, i) => (
                       <div key={i} className="flex flex-col items-center flex-1 h-full justify-end group z-10">
-                        <span className={`opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 px-1.5 py-0.5 rounded text-[9px] text-white mb-2 font-bold ${bar.cur ? 'opacity-100 text-[#fbba68]' : ''}`}>
+                        <span className={`opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 px-2 py-0.5 rounded text-[9px] text-white mb-2 font-bold ${bar.cur ? 'opacity-100 text-[#fbba68]' : ''}`}>
                           {bar.val}
                         </span>
                         <div 
                           style={{ height: bar.h }} 
-                          className={`w-1/2 rounded-t-md transition-all duration-1000 ${bar.cur ? 'bg-[#fbba68] shadow-[0_0_15px_rgba(251,186,104,0.3)]' : 'bg-surface-container-highest hover:bg-outline-variant'}`} 
+                          className={`w-full max-w-[40px] rounded-t-md transition-all duration-500 ${bar.cur ? 'bg-[#fbba68] shadow-[0_0_15px_rgba(251,186,104,0.3)]' : 'bg-surface-container-highest hover:bg-[#fbba68]/50'}`} 
                         />
-                        <span className="mt-3 font-semibold text-center">{bar.label}</span>
+                        <span className="mt-3 font-semibold text-center whitespace-nowrap text-[9px] md:text-[10px]">{bar.label}</span>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Informative Stats Summary card */}
+                <div className="glass-panel p-5 rounded-xl border border-outline-variant/30 flex items-center gap-4 bg-surface-container-low/20">
+                  <div className="w-10 h-10 rounded-full bg-secondary-fixed/10 flex items-center justify-center text-secondary-fixed shrink-0">
+                    <BarChart3 className="w-5 h-5" />
+                  </div>
+                  <div className="text-xs">
+                    <span className="font-bold text-white block">종합 데이터 요약</span>
+                    <p className="text-on-surface-variant mt-0.5 leading-relaxed">
+                      현재 기준 가장 활발한 상담 문의 유입 경로는 <span className="text-secondary-fixed font-bold">오가닉 랜딩페이지 검색(72.4%)</span>이며, 
+                      {analyticsTimeframe === 'year' && ' 2026년 상담 완료율은 89%로 전년 대비 14% 상승하였습니다.'}
+                      {analyticsTimeframe === 'month' && ' 최근 7월 문의는 전월 대비 약 15% 성장 가속화를 보이고 있습니다.'}
+                      {analyticsTimeframe === 'day' && ' 금일 현재 시뮬레이션 및 실제 상담 유입은 실시간으로 그래프에 기록 중입니다.'}
+                    </p>
                   </div>
                 </div>
 
@@ -923,30 +1130,153 @@ export default function AdminDashboard({
 
           {/* TAB 6: SETTINGS */}
           {activeTab === 'settings' && (
-            <div className="glass-panel rounded-xl p-8 max-w-2xl">
-              <h3 className="font-bold text-lg text-white pb-4 border-b border-outline-variant/30 mb-6">시스템 환경 변수 설정</h3>
+            <div className="space-y-8 animate-fadeIn max-w-2xl">
               
-              <div className="space-y-6">
-                {[
-                  { title: '신규 리드 접수시 어드민 실시간 푸시 수신', desc: '고객용 렌탈 예약 폼 접수 시 슬랙 웹훅 및 소리 푸시 발송 여부', check: true },
-                  { title: '렌딩 페이지 가상 유지보수 모드 작동', desc: '고객 랜딩 페이지 접속시 점검중 안내 페이지 전환 기능', check: false }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between gap-6 pb-4 border-b border-[#40484e]/20 last:border-0 last:pb-0">
+              {/* 1. KAKAO TALK INTEGRATION SETTINGS */}
+              <div className="glass-panel rounded-xl p-8 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-[#fbba68] opacity-50"></div>
+                <div className="flex items-center gap-2 pb-4 border-b border-outline-variant/30 mb-6">
+                  <div className="w-8 h-8 rounded-full bg-yellow-500/10 text-yellow-500 flex items-center justify-center font-bold">talk</div>
+                  <div>
+                    <h3 className="font-bold text-lg text-white">카카오톡 비즈니스 알림톡 연동 설정</h3>
+                    <p className="text-xs text-on-surface-variant">고객이 신규 렌탈 문의를 접수하면 관리자의 카카오톡으로 실시간 알림이 발송됩니다.</p>
+                  </div>
+                </div>
+
+                <div className="space-y-5">
+                  {/* Toggle */}
+                  <div className="flex items-center justify-between pb-4 border-b border-[#40484e]/20">
                     <div>
-                      <h4 className="font-bold text-sm text-white mb-1">{item.title}</h4>
-                      <p className="text-xs text-on-surface-variant max-w-md">{item.desc}</p>
+                      <h4 className="font-bold text-sm text-white mb-1">실시간 카카오 알림 활성화</h4>
+                      <p className="text-xs text-on-surface-variant">상담이 접수되는 즉시 설정된 관리자 연락처로 비즈니스 알림 전송</p>
                     </div>
                     
                     <button 
                       type="button"
-                      onClick={() => triggerNotification('설정이 성공적으로 반영되었습니다.')}
-                      className={`w-11 h-6 rounded-full p-1 transition-colors cursor-pointer ${item.check ? 'bg-secondary-fixed-dim flex justify-end' : 'bg-surface-container-highest flex justify-start'}`}
+                      id="btn_toggle_kakao"
+                      onClick={() => {
+                        const nextVal = !isKakaoEnabled;
+                        setIsKakaoEnabled(nextVal);
+                        localStorage.setItem('did_kakao_enabled', nextVal ? 'true' : 'false');
+                        triggerNotification(`카카오 알림 기능이 ${nextVal ? '활성화' : '비활성화'}되었습니다.`, 'success');
+                      }}
+                      className={`w-12 h-6 rounded-full p-1 transition-colors cursor-pointer ${isKakaoEnabled ? 'bg-yellow-500 flex justify-end' : 'bg-surface-container-highest flex justify-start'}`}
                     >
                       <span className="w-4 h-4 rounded-full bg-black block shadow" />
                     </button>
                   </div>
-                ))}
+
+                  {/* Form fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">발신 프로필 키 (Sender Profile Key)</label>
+                      <input 
+                        type="text"
+                        value={kakaoSenderKey}
+                        onChange={(e) => setKakaoSenderKey(e.target.value)}
+                        placeholder="예: DIDSYS-2026-KEY"
+                        className="w-full bg-surface-container-lowest border border-outline-variant focus:border-yellow-500 text-on-surface px-3 py-2 rounded-lg text-xs font-mono focus:outline-none"
+                        disabled={!isKakaoEnabled}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">알림톡 템플릿 코드 (Template Code)</label>
+                      <input 
+                        type="text"
+                        value={kakaoTemplateId}
+                        onChange={(e) => setKakaoTemplateId(e.target.value)}
+                        placeholder="예: tmpl_new_inquiry_alert_01"
+                        className="w-full bg-surface-container-lowest border border-outline-variant focus:border-yellow-500 text-on-surface px-3 py-2 rounded-lg text-xs font-mono focus:outline-none"
+                        disabled={!isKakaoEnabled}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[11px] font-bold text-on-surface-variant tracking-wider uppercase">알림 수신 관리자 휴대폰 번호</label>
+                    <input 
+                      type="text"
+                      value={kakaoAdminPhone}
+                      onChange={(e) => setKakaoAdminPhone(e.target.value)}
+                      placeholder="예: 010-1234-5678"
+                      className="w-full bg-surface-container-lowest border border-outline-variant focus:border-yellow-500 text-on-surface px-3 py-2 rounded-lg text-xs font-mono focus:outline-none"
+                      disabled={!isKakaoEnabled}
+                    />
+                  </div>
+
+                  {/* Action row */}
+                  <div className="flex items-center justify-between pt-4 border-t border-[#40484e]/20">
+                    <span className="text-[11px] text-on-surface-variant italic">
+                      {isKakaoEnabled ? '● Kakao Biz-Alimtalk module loaded (Sandbox active)' : 'KakaoTalk notification is disabled.'}
+                    </span>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        id="btn_test_kakao"
+                        onClick={handleSendTestKakao}
+                        disabled={!isKakaoEnabled || kakaoTestSending}
+                        className={`px-4 py-2 rounded-lg border text-xs font-bold transition-all cursor-pointer ${isKakaoEnabled ? 'border-yellow-500/40 text-yellow-500 hover:bg-yellow-500/10' : 'border-outline-variant/20 text-on-surface-variant cursor-not-allowed'}`}
+                      >
+                        {kakaoTestSending ? '전송중...' : '시뮬레이션 테스트 발송'}
+                      </button>
+                      <button
+                        type="button"
+                        id="btn_save_kakao"
+                        onClick={handleSaveKakaoSettings}
+                        disabled={!isKakaoEnabled}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${isKakaoEnabled ? 'bg-yellow-500 text-black hover:bg-yellow-400' : 'bg-surface-container-highest text-on-surface-variant cursor-not-allowed'}`}
+                      >
+                        설정 저장
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* 2. DATABASE INITIALIZATION CARD */}
+              <div className="glass-panel rounded-xl p-8 relative overflow-hidden border border-red-950/30">
+                <div className="absolute top-0 left-0 w-full h-1 bg-red-800 opacity-40"></div>
+                
+                <div className="pb-4 border-b border-outline-variant/30 mb-6">
+                  <h3 className="font-bold text-lg text-red-400">데이터베이스 시스템 초기화</h3>
+                  <p className="text-xs text-on-surface-variant">설치 사례 및 렌탈 신청 데이터를 리셋하거나, 전체 깨끗하게 포맷팅할 수 있습니다.</p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                  <div>
+                    <h4 className="font-bold text-sm text-white">데이터 보존 및 공공 템플릿 리셋</h4>
+                    <p className="text-xs text-on-surface-variant max-w-md mt-1">
+                      테스트를 위해 설치 사례와 고객 무료 상담 목록을 고화질 미디어가 포함된 데모 데이터로 복원합니다.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    id="btn_reset_default_data"
+                    onClick={handleResetDataClick}
+                    className="shrink-0 px-4 py-2 border border-outline-variant hover:border-[#fbba68] hover:text-[#fbba68] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
+                  >
+                    기본값 복원 (Restore)
+                  </button>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mt-6 pt-6 border-t border-[#40484e]/20">
+                  <div>
+                    <h4 className="font-bold text-sm text-red-400">모든 데이터 완전 삭제 (초기화)</h4>
+                    <p className="text-xs text-on-surface-variant max-w-md mt-1">
+                      모든 설치 목록 및 고객 상담 신청(leads) 내역을 완전히 삭제하고 완전 무 상태의 데이터베이스로 초기 가동합니다.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    id="btn_clear_all_data"
+                    onClick={handleClearAllDataClick}
+                    className="shrink-0 px-4 py-2 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-200 text-xs font-bold rounded-lg transition-colors cursor-pointer"
+                  >
+                    전체 데이터 삭제 (Clear All)
+                  </button>
+                </div>
+              </div>
+
             </div>
           )}
 

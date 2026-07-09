@@ -118,6 +118,24 @@ export default function App() {
     localStorage.setItem('luminous_hardware', JSON.stringify(updated));
   };
 
+  const handleResetToDefault = () => {
+    setCases(INITIAL_CASES);
+    setInquiries(INITIAL_INQUIRIES);
+    setHardware(INITIAL_HARDWARE);
+    localStorage.setItem('luminous_cases', JSON.stringify(INITIAL_CASES));
+    localStorage.setItem('luminous_inquiries', JSON.stringify(INITIAL_INQUIRIES));
+    localStorage.setItem('luminous_hardware', JSON.stringify(INITIAL_HARDWARE));
+  };
+
+  const handleClearAll = () => {
+    setCases([]);
+    setInquiries([]);
+    setHardware([]);
+    localStorage.setItem('luminous_cases', JSON.stringify([]));
+    localStorage.setItem('luminous_inquiries', JSON.stringify([]));
+    localStorage.setItem('luminous_hardware', JSON.stringify([]));
+  };
+
   return (
     <div className="w-full h-full min-h-screen bg-[#111416] text-[#e1e2e6] font-sans antialiased">
       {currentView === 'client' ? (
@@ -136,6 +154,8 @@ export default function App() {
           onUpdateInquiryStatus={handleUpdateInquiryStatus}
           hardware={hardware}
           onUpdateHardwareStock={handleUpdateHardwareStock}
+          onResetToDefault={handleResetToDefault}
+          onClearAll={handleClearAll}
           onLogout={navigateToClient}
         />
       )}
