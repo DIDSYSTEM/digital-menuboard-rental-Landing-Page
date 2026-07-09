@@ -461,20 +461,20 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
               >
                 {[
                   {
-                    title: '가입/설치비 0원',
+                    title: '설치비 0원',
                     desc: '초기 구매 부담 전면 제거',
-                    highlight: '목돈 부담 제로',
+                    highlight: '비용 부담 제로',
                     color: 'text-primary'
                   },
                   {
-                    title: '디자이너 매칭',
-                    desc: '우리 매장 맞춤형 프리미엄 시안',
-                    highlight: '무상 디자인 템플릿',
+                    title: '디자인 관리',
+                    desc: '시안 제작 및 변경사항 원격 업데이트',
+                    highlight: '디자인 비용 0원',
                     color: 'text-secondary-fixed'
                   },
                   {
-                    title: '평생 무상 보장',
-                    desc: '원격 원스톱 정밀 케어 및 고장 교체',
+                    title: '평생 무상 A/S',
+                    desc: '렌탈 기간내 전 제품 무상 교체',
                     highlight: '전국 무상 A/S 정책',
                     color: 'text-[#fbba68]'
                   }
@@ -506,7 +506,7 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
                 <div className="hidden sm:block text-outline-variant">|</div>
                 <div>누적 만족도 <span className="text-white font-bold">99.4%</span></div>
                 <div className="hidden sm:block text-outline-variant">|</div>
-                <div>설치 점포 <span className="text-[#fbba68] font-bold">1,850+ 매장 돌파</span></div>
+                <div>설치 점포 <span className="text-[#fbba68] font-bold">850+ 매장 돌파</span></div>
                 <div className="hidden sm:block text-outline-variant">|</div>
                 <div>평균 견적 피드백 <span className="text-primary font-bold">15분 이내 완료</span></div>
               </motion.div>
