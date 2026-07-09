@@ -4,6 +4,14 @@ import { INITIAL_CASES, INITIAL_HARDWARE, INITIAL_INQUIRIES } from './data';
 import ClientHome from './components/ClientHome';
 import AdminDashboard from './components/AdminDashboard';
 
+const safeSetLocalStorage = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    console.warn(`[LocalStorage Error] Failed to write key "${key}" to localStorage (likely due to storage quota limits for base64 images). Writing will bypass localStorage, but state and server database persistence will still succeed normally.`, e);
+  }
+};
+
 export default function App() {
   // Navigation State: 'client' (Landing) or 'admin' (Dashboard)
   const [currentView, setCurrentView] = useState<'client' | 'admin'>(() => {
@@ -58,15 +66,15 @@ export default function App() {
       .then(data => {
         if (data.cases) {
           setCases(data.cases);
-          localStorage.setItem('luminous_cases', JSON.stringify(data.cases));
+          safeSetLocalStorage('luminous_cases', JSON.stringify(data.cases));
         }
         if (data.inquiries) {
           setInquiries(data.inquiries);
-          localStorage.setItem('luminous_inquiries', JSON.stringify(data.inquiries));
+          safeSetLocalStorage('luminous_inquiries', JSON.stringify(data.inquiries));
         }
         if (data.hardware) {
           setHardware(data.hardware);
-          localStorage.setItem('luminous_hardware', JSON.stringify(data.hardware));
+          safeSetLocalStorage('luminous_hardware', JSON.stringify(data.hardware));
         }
       })
       .catch(err => {
@@ -119,21 +127,21 @@ export default function App() {
     };
     const updated = [created, ...cases];
     setCases(updated);
-    localStorage.setItem('luminous_cases', JSON.stringify(updated));
+    safeSetLocalStorage('luminous_cases', JSON.stringify(updated));
     saveToServer(updated, inquiries, hardware);
   };
 
   const handleUpdateCase = (updatedCase: InstallationCase) => {
     const updated = cases.map(c => c.id === updatedCase.id ? updatedCase : c);
     setCases(updated);
-    localStorage.setItem('luminous_cases', JSON.stringify(updated));
+    safeSetLocalStorage('luminous_cases', JSON.stringify(updated));
     saveToServer(updated, inquiries, hardware);
   };
 
   const handleDeleteCase = (id: string) => {
     const updated = cases.filter(c => c.id !== id);
     setCases(updated);
-    localStorage.setItem('luminous_cases', JSON.stringify(updated));
+    safeSetLocalStorage('luminous_cases', JSON.stringify(updated));
     saveToServer(updated, inquiries, hardware);
   };
 
@@ -146,14 +154,14 @@ export default function App() {
     };
     const updated = [newInq, ...inquiries];
     setInquiries(updated);
-    localStorage.setItem('luminous_inquiries', JSON.stringify(updated));
+    safeSetLocalStorage('luminous_inquiries', JSON.stringify(updated));
     saveToServer(cases, updated, hardware);
   };
 
   const handleUpdateInquiryStatus = (id: string, status: RentalInquiry['status']) => {
     const updated = inquiries.map(inq => inq.id === id ? { ...inq, status } : inq);
     setInquiries(updated);
-    localStorage.setItem('luminous_inquiries', JSON.stringify(updated));
+    safeSetLocalStorage('luminous_inquiries', JSON.stringify(updated));
     saveToServer(cases, updated, hardware);
   };
 
@@ -171,7 +179,7 @@ export default function App() {
       return item;
     });
     setHardware(updated);
-    localStorage.setItem('luminous_hardware', JSON.stringify(updated));
+    safeSetLocalStorage('luminous_hardware', JSON.stringify(updated));
     saveToServer(cases, inquiries, updated);
   };
 
@@ -179,9 +187,9 @@ export default function App() {
     setCases(INITIAL_CASES);
     setInquiries(INITIAL_INQUIRIES);
     setHardware(INITIAL_HARDWARE);
-    localStorage.setItem('luminous_cases', JSON.stringify(INITIAL_CASES));
-    localStorage.setItem('luminous_inquiries', JSON.stringify(INITIAL_INQUIRIES));
-    localStorage.setItem('luminous_hardware', JSON.stringify(INITIAL_HARDWARE));
+    safeSetLocalStorage('luminous_cases', JSON.stringify(INITIAL_CASES));
+    safeSetLocalStorage('luminous_inquiries', JSON.stringify(INITIAL_INQUIRIES));
+    safeSetLocalStorage('luminous_hardware', JSON.stringify(INITIAL_HARDWARE));
     saveToServer(INITIAL_CASES, INITIAL_INQUIRIES, INITIAL_HARDWARE);
   };
 
@@ -189,9 +197,9 @@ export default function App() {
     setCases([]);
     setInquiries([]);
     setHardware([]);
-    localStorage.setItem('luminous_cases', JSON.stringify([]));
-    localStorage.setItem('luminous_inquiries', JSON.stringify([]));
-    localStorage.setItem('luminous_hardware', JSON.stringify([]));
+    safeSetLocalStorage('luminous_cases', JSON.stringify([]));
+    safeSetLocalStorage('luminous_inquiries', JSON.stringify([]));
+    safeSetLocalStorage('luminous_hardware', JSON.stringify([]));
     saveToServer([], [], []);
   };
 
