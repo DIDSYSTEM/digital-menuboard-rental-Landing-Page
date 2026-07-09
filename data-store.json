@@ -1,0 +1,71 @@
+{
+  "cases": [
+    {
+      "id": "1",
+      "title": "카페 A사 (3대 설치)",
+      "description": "모던한 인테리어에 맞춘 슬림 베젤 디자인. 4K 초슬림 DID 모니터 설치로 선명하고 다이내믹한 메뉴 정보 및 브랜드 프로모션 송출이 가능합니다.",
+      "englishDescription": "Premium 4K ultra-thin bezels installed behind the main counter for dynamic menu and promotional content.",
+      "imageUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuBge6vq3gTUv6zjnkueNn4WLWyAAxqfWjgq3_dBHpnQo3udmDfCkn8mWbANGszFTNCAjkBJVGtqImGE8GnrXSWySTaxrSrs97snRn3VTXHdx-u42D5377O8jYH8jJu2AJN4-tGW5pCj8ePEPq67WyGUR_Voi_iV32_uQal7BKrvVT0QA6235LKT9c2i2jcnOT9w3-L3gxSS6wMPaObh8BmXNb7oydcky-_t2r3t3vAASQsO4461MTb8",
+      "status": "Online",
+      "category": "Cafe",
+      "location": "서울 강남구",
+      "specs": "55인치 초슬림 베젤 DID 3대, 동기화 컨트롤러, 원격 통합 관리 웹 CMS",
+      "createdAt": "2026-07-01"
+    },
+    {
+      "id": "2",
+      "title": "글로벌 B기업 로비 (비디오월)",
+      "description": "웅장하고 미래지향적인 기업 로비를 완성하는 5x5 매트릭스 비디오월입니다. 원격 실시간 미디어 전송 솔루션을 결합하여 압도적인 브랜드 임팩트를 전달합니다.",
+      "englishDescription": "Seamless 5x5 matrix video wall delivering high-impact brand messaging in main architectural atrium.",
+      "imageUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuDO4Y2hWJubl8YZg3xHqYm_2Ja4uqAu9w5SW_ALxeU4_7Nix0aFu8Jz38bAi4yFsoFpusxt1xwMQac2Ai5x1yWiGJauID-MI_E0kDJWkWFlBdBsGNgnAYEWnyzCBSBUMiNDF0GOwRLNHHRPD9wchZSTKK-2qaxQ-5z0BgFdaz6XGQw0Y7KjRN0xOQZQxGf8KRdz0KoGyiOZTsRL_uY0QbXYsnK8PkqEnC9z6v_ztFufFEQR0Nu_8jd3",
+      "status": "Online",
+      "category": "Lobby",
+      "location": "인천 송도국제도시",
+      "specs": "55인치 비디오월 전용 패널 25대 (5x5 배치), 초정밀 벽면 마운트 하드웨어, 분산 제어 미디어 서버",
+      "createdAt": "2026-07-02"
+    },
+    {
+      "id": "3",
+      "title": "C 뷰티 플래그십 (스탠드형)",
+      "description": "매장을 찾는 고객들에게 스마트한 웨이파인딩(길찾기) 및 고화질 제품 카탈로그, 실시간 할인 정보를 제공하는 슬림 디자인 터치 스탠드 키오스크입니다.",
+      "englishDescription": "Freestanding interactive kiosks strategically placed for wayfinding and localized product promotion.",
+      "imageUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuDyInaQH2li3_eXoenC3bVjIcfOEmiZjKkNjYZwWmE4mtWE41QGRVX9NS7nqQEpMbXIQZgISKkaQq6AgVOvxnVCwD5dxxHgE1y75geyhiLS33NXapa3tQ17dz9zTblNZTXFrAYT69EA3Owd88jLY5DSMLh0QyxuoSXdhYyBb33CBpzzwKIuCF903qaqERcjCmLIGOAqi6lpPhuqr4aAWCaDPSnPN-_SWrN1pXVIuaO7BIyss-yfrL68",
+      "status": "Maintenance",
+      "category": "Retail",
+      "location": "서울 중구 명동",
+      "specs": "65인치 아웃도어급 고휘도 정전식 멀티 터치 스크린, 모바일 인터랙티브 스냅드래곤 임베디드 코어",
+      "createdAt": "2026-07-03"
+    }
+  ],
+  "hardware": [
+    { "id": "h1", "name": "55인치 고휘도 슬림 베젤 DID 패널", "type": "Panel", "stock": 12, "status": "In Stock" },
+    { "id": "h2", "name": "55인치 비디오월 극초슬림 베젤 패널 (0.88mm)", "type": "Panel", "stock": 3, "status": "Low Stock" },
+    { "id": "h3", "name": "65인치 안드로이드 스마트 스탠드형 키오스크", "type": "Kiosk", "stock": 8, "status": "In Stock" },
+    { "id": "h4", "name": "4K DID 미디어 클라이언트 재생 플레이어", "type": "Player", "stock": 24, "status": "In Stock" },
+    { "id": "h5", "name": "실외 아웃도어용 75인치 이중 방열 키오스크", "type": "Kiosk", "stock": 0, "status": "Out of Stock" }
+  ],
+  "inquiries": [
+    {
+      "id": "inq-1",
+      "name": "김도훈",
+      "phone": "010-1234-5678",
+      "company": "카페 멜로우스",
+      "quantity": "3대",
+      "installationTime": "1개월 이내",
+      "message": "새로 오픈하는 브런치 카페에 메뉴보드용으로 3대 대여 및 콘텐츠 세팅 서비스 견적을 받고 싶습니다.",
+      "status": "Pending",
+      "createdAt": "2026-07-05 14:32"
+    },
+    {
+      "id": "inq-2",
+      "name": "이지연",
+      "phone": "010-9876-5432",
+      "company": "(주)하이테크글로벌",
+      "quantity": "5대 이상",
+      "installationTime": "1주일 이내",
+      "message": "로비에 원형 기둥 감싸는 비디오월이나 천장형 5대 이상 설치가 빠르게 가능한지 일정 확인 부탁드립니다.",
+      "status": "Contacted",
+      "createdAt": "2026-07-04 11:15"
+    }
+  ]
+}

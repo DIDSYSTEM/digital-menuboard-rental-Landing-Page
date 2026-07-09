@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InstallationCase, RentalInquiry, HardwareItem } from './types';
 import { INITIAL_CASES, INITIAL_HARDWARE, INITIAL_INQUIRIES } from './data';
 import ClientHome from './components/ClientHome';
@@ -48,6 +48,57 @@ export default function App() {
     return INITIAL_HARDWARE;
   });
 
+  // Fetch initial data from server-side store on mount
+  useEffect(() => {
+    fetch('/api/data')
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(data => {
+        if (data.cases) {
+          setCases(data.cases);
+          localStorage.setItem('luminous_cases', JSON.stringify(data.cases));
+        }
+        if (data.inquiries) {
+          setInquiries(data.inquiries);
+          localStorage.setItem('luminous_inquiries', JSON.stringify(data.inquiries));
+        }
+        if (data.hardware) {
+          setHardware(data.hardware);
+          localStorage.setItem('luminous_hardware', JSON.stringify(data.hardware));
+        }
+      })
+      .catch(err => {
+        console.warn('Could not sync with server-side store, falling back to localStorage:', err);
+      });
+  }, []);
+
+  // Helper to persist state to the server database
+  const saveToServer = (updatedCases: InstallationCase[], updatedInquiries: RentalInquiry[], updatedHardware: HardwareItem[]) => {
+    fetch('/api/data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        cases: updatedCases,
+        inquiries: updatedInquiries,
+        hardware: updatedHardware,
+      }),
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to save to server');
+      return res.json();
+    })
+    .then(data => {
+      console.log('Successfully saved to server-side store:', data);
+    })
+    .catch(err => {
+      console.error('Error saving data to server-side store:', err);
+    });
+  };
+
   // Navigation handlers
   const navigateToAdmin = () => {
     setCurrentView('admin');
@@ -59,7 +110,7 @@ export default function App() {
     localStorage.setItem('luminous_last_view', 'client');
   };
 
-  // State modifiers & localStorage syncer
+  // State modifiers & localStorage/server syncer
   const handleAddCase = (newCase: Omit<InstallationCase, 'id' | 'createdAt'>) => {
     const created: InstallationCase = {
       ...newCase,
@@ -69,18 +120,21 @@ export default function App() {
     const updated = [created, ...cases];
     setCases(updated);
     localStorage.setItem('luminous_cases', JSON.stringify(updated));
+    saveToServer(updated, inquiries, hardware);
   };
 
   const handleUpdateCase = (updatedCase: InstallationCase) => {
     const updated = cases.map(c => c.id === updatedCase.id ? updatedCase : c);
     setCases(updated);
     localStorage.setItem('luminous_cases', JSON.stringify(updated));
+    saveToServer(updated, inquiries, hardware);
   };
 
   const handleDeleteCase = (id: string) => {
     const updated = cases.filter(c => c.id !== id);
     setCases(updated);
     localStorage.setItem('luminous_cases', JSON.stringify(updated));
+    saveToServer(updated, inquiries, hardware);
   };
 
   const handleAddInquiry = (inquiryData: Omit<RentalInquiry, 'id' | 'createdAt' | 'status'>) => {
@@ -93,12 +147,14 @@ export default function App() {
     const updated = [newInq, ...inquiries];
     setInquiries(updated);
     localStorage.setItem('luminous_inquiries', JSON.stringify(updated));
+    saveToServer(cases, updated, hardware);
   };
 
   const handleUpdateInquiryStatus = (id: string, status: RentalInquiry['status']) => {
     const updated = inquiries.map(inq => inq.id === id ? { ...inq, status } : inq);
     setInquiries(updated);
     localStorage.setItem('luminous_inquiries', JSON.stringify(updated));
+    saveToServer(cases, updated, hardware);
   };
 
   const handleUpdateHardwareStock = (id: string, delta: number) => {
@@ -116,6 +172,7 @@ export default function App() {
     });
     setHardware(updated);
     localStorage.setItem('luminous_hardware', JSON.stringify(updated));
+    saveToServer(cases, inquiries, updated);
   };
 
   const handleResetToDefault = () => {
@@ -125,6 +182,7 @@ export default function App() {
     localStorage.setItem('luminous_cases', JSON.stringify(INITIAL_CASES));
     localStorage.setItem('luminous_inquiries', JSON.stringify(INITIAL_INQUIRIES));
     localStorage.setItem('luminous_hardware', JSON.stringify(INITIAL_HARDWARE));
+    saveToServer(INITIAL_CASES, INITIAL_INQUIRIES, INITIAL_HARDWARE);
   };
 
   const handleClearAll = () => {
@@ -134,6 +192,7 @@ export default function App() {
     localStorage.setItem('luminous_cases', JSON.stringify([]));
     localStorage.setItem('luminous_inquiries', JSON.stringify([]));
     localStorage.setItem('luminous_hardware', JSON.stringify([]));
+    saveToServer([], [], []);
   };
 
   return (
