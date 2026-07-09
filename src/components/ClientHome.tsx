@@ -327,10 +327,12 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
           }}
           className="flex items-center gap-2 cursor-pointer select-none"
         >
-          <div className="w-7 h-7 rounded-full bg-primary-container flex items-center justify-center neon-glow">
-            <Monitor className="w-4 h-4 text-white" />
-          </div>
-          <span className="font-bold text-lg text-primary tracking-tight neon-text-glow font-mono">DID SYSTEM</span>
+          <img 
+            src="https://ecimg.cafe24img.com/pg382b66768913089/didinfo/web/upload/kdesign/logo.png"
+            alt="DID SYSTEM Logo" 
+            className="h-7 md:h-8 object-contain"
+            referrerPolicy="no-referrer"
+          />
         </a>
 
         {/* Desktop Nav Links */}
@@ -368,73 +370,147 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
       </nav>
 
       {/* Hero Section */}
-      <header className="relative w-full py-16 md:py-24 flex items-center justify-center min-h-[85vh] z-10 overflow-hidden border-b border-[#40484e]/10">
-        {/* Full-screen background image of actual digital menuboard in cafe */}
+      <header className="relative w-full py-20 md:py-32 flex items-center justify-center min-h-[90vh] z-10 overflow-hidden border-b border-[#40484e]/20">
+        {/* Dynamic Multi-dimensional Background & Vivid Light Leaks */}
         <div className="absolute inset-0 z-0">
           <img 
             src={cafeHeroImg} 
             alt="Cafe with Digital Menuboards" 
-            className="w-full h-full object-cover object-center opacity-40 filter brightness-90 scale-105 transition-transform duration-1000"
+            className="w-full h-full object-cover object-center opacity-30 filter brightness-[85%] scale-105 transition-transform duration-1000"
             referrerPolicy="no-referrer"
           />
-          {/* Layered luxury overlay to maintain superb readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#111416]/95 via-[#111416]/75 to-[#111416]/95" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#111416]/50 via-transparent to-[#111416]" />
+          {/* Layered high-luxury gradients and bright futuristic light leaks */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#111416]/98 via-[#111416]/80 to-[#111416]/98" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#111416]/60 via-transparent to-[#111416]" />
+          
+          {/* Vivid ambient cyber glows to cure dullness */}
+          <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[600px] h-[350px] md:h-[600px] rounded-full bg-[radial-gradient(circle,rgba(68,214,255,0.12)_0%,transparent_65%)] blur-2xl pointer-events-none" />
+          <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[350px] md:w-[600px] h-[350px] md:h-[600px] rounded-full bg-[radial-gradient(circle,rgba(251,186,104,0.1)_0%,transparent_65%)] blur-2xl pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-primary/5 blur-3xl pointer-events-none" />
         </div>
-
+ 
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full flex items-center justify-center">
-          <div className="glass-panel rounded-2xl w-full p-8 md:p-12 lg:p-16 relative overflow-hidden flex flex-col items-center text-center">
-            {/* Ambient accent light */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(68,214,255,0.06)_0%,transparent_70%)] pointer-events-none" />
-
-            <div className="relative z-10 max-w-4xl flex flex-col items-center">
+          <div className="glass-panel rounded-3xl w-full p-8 md:p-14 lg:p-20 relative overflow-hidden flex flex-col items-center text-center border border-white/10 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]">
+            {/* Bright background diagonal flash & subtle particle glow */}
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-secondary-fixed-dim to-primary opacity-80" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(68,214,255,0.08)_0%,transparent_60%)] pointer-events-none" />
+ 
+            <div className="relative z-10 max-w-5xl flex flex-col items-center">
+              {/* Floating Animated Badge */}
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="px-3.5 py-1 rounded-full bg-secondary-fixed-dim/15 border border-secondary-fixed-dim/30 text-secondary-fixed-dim text-xs font-semibold tracking-wider uppercase mb-6"
+                transition={{ duration: 0.7 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-secondary-fixed-dim/10 border border-primary/30 text-primary text-xs md:text-sm font-bold tracking-wider uppercase mb-8 shadow-[0_0_15px_rgba(68,214,255,0.15)] animate-pulse"
               >
-                PREMIUM DIGITAL MENUBOARD RENTAL SERVICE
+                <Sparkles className="w-4 h-4 text-[#fbba68] animate-spin-slow" />
+                <span>Premium DID Rental Service</span>
               </motion.div>
-
+ 
+              {/* Premium High-Contrast Heading */}
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight font-sans"
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight font-sans"
               >
-                디지털 메뉴보드,<br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary-fixed-dim">구매하지 말고 렌탈</span>로 시작하세요.
+                디지털 메뉴보드,<br className="sm:hidden" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#59e2ff] via-white to-[#fbba68] drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                  구매 말고 렌탈
+                </span>로 현명하게 시작하세요.
               </motion.h1>
-
+ 
+              {/* Subtitle */}
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-on-surface-variant text-base md:text-lg lg:text-xl mt-6 max-w-2xl leading-relaxed"
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="text-on-surface-variant text-base md:text-xl lg:text-2xl mt-8 max-w-3xl leading-relaxed font-normal text-[#a6adb5]"
               >
-                카페·음식점·프랜차이즈 매장에 맞춰 디지털 메뉴보드 설치부터 디자인 콘텐츠 세팅, 원격 통합 관리까지 한 번에 전문적으로 지원합니다.
+                카페·음식점·프랜차이즈 맞춤 하드웨어 공급부터 전담 디자이너 매칭, 
+                원격 통합 원클릭 스크린 송출까지 모든 과정을 완벽하게 지원합니다.
               </motion.p>
-
+ 
+              {/* Action Buttons with Interactive Pulsing Glows */}
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex flex-col sm:flex-row items-center gap-4 mt-10 w-full justify-center"
+                transition={{ duration: 0.7, delay: 0.3 }}
+                className="flex flex-col sm:flex-row items-center gap-5 mt-12 w-full justify-center max-w-md md:max-w-xl"
               >
                 <button 
                   onClick={() => scrollToSection('inquiry')}
-                  className="btn-gradient w-full sm:w-auto px-8 py-4 rounded-xl text-black font-bold text-base hover:scale-105 transition-transform duration-200 cursor-pointer shadow-lg neon-glow flex items-center justify-center gap-2"
+                  className="btn-gradient w-full sm:w-auto px-10 py-5 rounded-2xl text-black font-extrabold text-base md:text-lg hover:scale-105 transition-transform duration-200 cursor-pointer shadow-[0_0_30px_rgba(68,214,255,0.4)] neon-glow flex items-center justify-center gap-2.5"
                 >
-                  렌탈 상담 신청 <ArrowRight className="w-5 h-5" />
+                  무료 견적/렌탈 신청 <ArrowRight className="w-5 h-5 stroke-[2.5]" />
                 </button>
                 <button 
                   onClick={() => scrollToSection('showcase')}
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-surface-container-high border border-outline-variant hover:bg-surface-variant transition-colors text-white font-bold text-base cursor-pointer flex items-center justify-center"
+                  className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-surface-container-high/90 border border-outline-variant hover:bg-surface-variant hover:border-[#fbba68] transition-all duration-200 text-white font-extrabold text-base md:text-lg cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
                 >
-                  설치사례 보기
+                  설치사례 갤러리
                 </button>
               </motion.div>
+
+              {/* Three High-Impact Benefit Highlights Card Layout */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-16 pt-10 border-t border-outline-variant/20"
+              >
+                {[
+                  {
+                    title: '가입/설치비 0원',
+                    desc: '초기 구매 부담 전면 제거',
+                    highlight: '목돈 부담 제로',
+                    color: 'text-primary'
+                  },
+                  {
+                    title: '디자이너 매칭',
+                    desc: '우리 매장 맞춤형 프리미엄 시안',
+                    highlight: '무상 디자인 템플릿',
+                    color: 'text-secondary-fixed'
+                  },
+                  {
+                    title: '평생 무상 보장',
+                    desc: '원격 원스톱 정밀 케어 및 고장 교체',
+                    highlight: '전국 무상 A/S 정책',
+                    color: 'text-[#fbba68]'
+                  }
+                ].map((benefit, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex flex-col items-center md:items-start text-center md:text-left p-5 rounded-2xl bg-[#1a1f22]/60 border border-white/5 hover:border-white/10 transition-all duration-300"
+                  >
+                    <span className={`text-xs font-bold tracking-widest uppercase ${benefit.color} mb-1`}>
+                      {benefit.highlight}
+                    </span>
+                    <h3 className="text-white font-bold text-lg">{benefit.title}</h3>
+                    <p className="text-xs text-on-surface-variant mt-1.5">{benefit.desc}</p>
+                  </div>
+                ))}
+              </motion.div>
+
+              {/* Realtime trust statistics ribbon */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.95 }}
+                transition={{ duration: 1, delay: 0.6 }}
+                className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-10 text-xs text-on-surface-variant font-mono"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span>실시간 문의 활성화</span>
+                </div>
+                <div className="hidden sm:block text-outline-variant">|</div>
+                <div>누적 만족도 <span className="text-white font-bold">99.4%</span></div>
+                <div className="hidden sm:block text-outline-variant">|</div>
+                <div>설치 점포 <span className="text-[#fbba68] font-bold">1,850+ 매장 돌파</span></div>
+                <div className="hidden sm:block text-outline-variant">|</div>
+                <div>평균 견적 피드백 <span className="text-primary font-bold">15분 이내 완료</span></div>
+              </motion.div>
+
             </div>
           </div>
         </div>
@@ -968,10 +1044,12 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
           }}
           className="flex items-center gap-2.5 opacity-95 w-fit select-none cursor-pointer"
         >
-          <div className="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center shadow-[0_0_10px_rgba(68,214,255,0.15)]">
-            <Monitor className="w-4.5 h-4.5 text-white" />
-          </div>
-          <span className="font-extrabold text-lg text-white tracking-wider font-sans">DID SYSTEM</span>
+          <img 
+            src="https://ecimg.cafe24img.com/pg382b66768913089/didinfo/web/upload/kdesign/logo.png"
+            alt="DID SYSTEM Logo" 
+            className="h-8 md:h-9 object-contain"
+            referrerPolicy="no-referrer"
+          />
         </a>
         
         {/* Business Info Details */}

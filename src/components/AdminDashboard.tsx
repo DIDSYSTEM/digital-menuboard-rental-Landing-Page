@@ -389,7 +389,7 @@ export default function AdminDashboard({
             </div>
             <h1 className="font-bold text-sm text-primary neon-text-glow leading-tight">디지털 메뉴보드<br/>렌탈 상담관리</h1>
           </div>
-          <p className="text-[10px] font-bold tracking-wider uppercase text-on-surface-variant font-mono mt-1">Luminous Admin</p>
+          <p className="text-[10px] font-bold tracking-wider uppercase text-on-surface-variant font-mono mt-1">DIDSYSTEM ADMIN</p>
         </div>
 
         {/* Navigation list */}
@@ -490,7 +490,7 @@ export default function AdminDashboard({
                 {activeTab === 'dashboard' && '| 운영 종합 대시보드'}
                 {activeTab === 'inquiries' && '| 상담 신청 리드 관리'}
                 {activeTab === 'analytics' && '| 시스템 운영 통계 및 유입 분석'}
-                {activeTab === 'settings' && '| Luminous Admin 설정'}
+                {activeTab === 'settings' && '| DIDSYSTEM ADMIN 설정'}
               </span>
             </h2>
           </div>
