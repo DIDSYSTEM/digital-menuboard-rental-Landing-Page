@@ -23,6 +23,7 @@ import {
   X
 } from 'lucide-react';
 import { InstallationCase, HardwareItem, RentalInquiry } from '../types';
+import { compressImage } from '../utils';
 
 interface AdminDashboardProps {
   cases: InstallationCase[];
@@ -179,10 +180,12 @@ export default function AdminDashboard({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         if (event.target?.result) {
-          setFormImgUrl(event.target.result as string);
-          triggerNotification('내 PC에서 이미지를 성공적으로 불러왔습니다.', 'success');
+          const rawBase64 = event.target.result as string;
+          const compressed = await compressImage(rawBase64);
+          setFormImgUrl(compressed);
+          triggerNotification('내 PC에서 이미지를 성공적으로 불러와 최적화(압축)했습니다.', 'success');
         }
       };
       reader.readAsDataURL(file);
@@ -198,10 +201,12 @@ export default function AdminDashboard({
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         if (event.target?.result) {
-          setFormImgUrl(event.target.result as string);
-          triggerNotification('드롭한 이미지를 불러왔습니다.', 'success');
+          const rawBase64 = event.target.result as string;
+          const compressed = await compressImage(rawBase64);
+          setFormImgUrl(compressed);
+          triggerNotification('드롭한 이미지를 성공적으로 최적화(압축)하여 불러왔습니다.', 'success');
         }
       };
       reader.readAsDataURL(file);

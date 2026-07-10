@@ -22,6 +22,7 @@ import {
   FileImage
 } from 'lucide-react';
 import { InstallationCase, RentalInquiry } from '../types';
+import { compressImage } from '../utils';
 // @ts-ignore
 import cafeHeroImg from '../assets/images/cafe_digital_menu_1783333360370.jpg';
 
@@ -126,9 +127,11 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
         }
 
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = async (event) => {
           if (event.target?.result) {
-            setStoreImages(prev => [...prev, event.target!.result as string].slice(0, 5));
+            const rawBase64 = event.target.result as string;
+            const compressed = await compressImage(rawBase64);
+            setStoreImages(prev => [...prev, compressed].slice(0, 5));
           }
         };
         reader.readAsDataURL(file);
@@ -910,9 +913,11 @@ export default function ClientHome({ cases, onAddInquiry, onNavigateToAdmin }: C
                         return;
                       }
                       const reader = new FileReader();
-                      reader.onload = (event) => {
+                      reader.onload = async (event) => {
                         if (event.target?.result) {
-                          setStoreImages(prev => [...prev, event.target!.result as string].slice(0, 5));
+                          const rawBase64 = event.target.result as string;
+                          const compressed = await compressImage(rawBase64);
+                          setStoreImages(prev => [...prev, compressed].slice(0, 5));
                         }
                       };
                       reader.readAsDataURL(file);

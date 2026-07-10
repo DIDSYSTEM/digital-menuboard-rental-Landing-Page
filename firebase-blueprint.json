@@ -1,0 +1,30 @@
+{
+  "entities": {
+    "AppStore": {
+      "title": "AppStore",
+      "description": "Consolidated state of the Luminous DID management system containing cases, inquiries, and hardware items",
+      "type": "object",
+      "properties": {
+        "cases": {
+          "type": "array",
+          "description": "List of active installations and case studies"
+        },
+        "inquiries": {
+          "type": "array",
+          "description": "List of client rental inquiries"
+        },
+        "hardware": {
+          "type": "array",
+          "description": "List of hardware inventory items with stocks"
+        }
+      },
+      "required": ["cases", "inquiries", "hardware"]
+    }
+  },
+  "firestore": {
+    "/appData/luminous_store": {
+      "schema": "AppStore",
+      "description": "The unified store holding the entire state of the DID system"
+    }
+  }
+}
